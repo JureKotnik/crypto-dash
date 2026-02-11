@@ -17,4 +17,4 @@ import { Header } from './components/header/header';
     </main>
   `
 })
-export class AppComponent {}
+export class App {}
