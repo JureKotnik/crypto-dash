@@ -26,17 +26,16 @@ export class CryptoService {
     this.socket.onmessage = (event) => {
       const data = JSON.parse(event.data);
       const currentPrice = parseFloat(data.p);
-      const timeString = new Date(data.E).toLocaleTimeString(); // Get HH:MM:SS
+      const timestamp = data.E; // Use raw milliseconds for the chart
 
-      // Update current price string
       this.btcPrice.set(currentPrice.toFixed(2));
 
-      // NEW: Update history array for the chart
       this.priceHistory.update(history => {
-        // Create new array with the latest point
-        const newHistory = [...history, { x: timeString, y: currentPrice }];
-        // Keep only the last 20 data points to prevent the chart from overflowing
-        if (newHistory.length > 20) {
+        // x is now a number (timestamp), not a string
+        const newHistory = [...history, { x: timestamp, y: currentPrice }];
+        
+        // Keep 40 points for a smoother, wider looking line
+        if (newHistory.length > 40) {
           newHistory.shift(); 
         }
         return newHistory;
